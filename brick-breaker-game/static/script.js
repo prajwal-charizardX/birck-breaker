@@ -18,10 +18,10 @@ let ballSpeedX = 2;
 let ballSpeedY = -2;
 
 // Brick properties
-const brickRowCount = 5;
-const brickColumnCount = 3;
 const brickWidth = 75;
 const brickHeight = 20;
+const brickRowCount = 5;
+const brickColumnCount = 5;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
@@ -141,12 +141,15 @@ function checkWin() {
     }
 }
 
+// Game over function
 function gameOver() {
     lives--;
+    document.getElementById("lives").textContent = lives; // Update lives display
     if (lives === 0) {
         alert("Game Over");
         document.location.reload();
     } else {
+        // Reset ball and paddle
         ballX = canvas.width / 2;
         ballY = canvas.height - 30;
         ballSpeedX = 2;

@@ -34,6 +34,24 @@ for (let c = 0; c < brickColumnCount; c++) {
     }
 }
 
+// Draw paddle
+function drawPaddle() {
+    ctx.beginPath();
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+// Draw ball
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
 // Draw bricks
 function drawBricks() {
     for (let c = 0; c < brickColumnCount; c++) {
@@ -57,14 +75,15 @@ function drawBricks() {
 // Game loop
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBricks();
     drawPaddle();
     drawBall();
+    collisionDetection();
+    checkWin();
 
-    // Update ball position
     ballX += ballSpeedX;
     ballY += ballSpeedY;
 
-    // Ball collision with walls
     if (ballX + ballSpeedX > canvas.width - ballRadius || ballX + ballSpeedX < ballRadius) {
         ballSpeedX = -ballSpeedX;
     }
@@ -74,13 +93,15 @@ function draw() {
         if (ballX > paddleX && ballX < paddleX + paddleWidth) {
             ballSpeedY = -ballSpeedY;
         } else {
-            // Game over logic
-            document.location.reload();
+            gameOver();
         }
     }
 
     requestAnimationFrame(draw);
 }
+
+let score = 0;
+let lives = 3;
 
 // Ball collision with bricks
 function collisionDetection() {
@@ -95,7 +116,9 @@ function collisionDetection() {
                     ballY < b.y + brickHeight
                 ) {
                     ballSpeedY = -ballSpeedY;
-                    b.status = 0; // Mark brick as hit
+                    b.status = 0;
+                    score += 10; // Increase score
+                    document.getElementById("score").textContent = score; // Update score display
                 }
             }
         }
@@ -118,36 +141,18 @@ function checkWin() {
     }
 }
 
-// Game over function
 function gameOver() {
-    alert("Game Over");
-    document.location.reload();
-}
-
-// Update function
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBricks();
-    drawPaddle();
-    drawBall();
-    collisionDetection();
-    checkWin();
-
-    // Ball collision with walls
-    if (ballX + ballSpeedX > canvas.width - ballRadius || ballX + ballSpeedX < ballRadius) {
-        ballSpeedX = -ballSpeedX;
+    lives--;
+    if (lives === 0) {
+        alert("Game Over");
+        document.location.reload();
+    } else {
+        ballX = canvas.width / 2;
+        ballY = canvas.height - 30;
+        ballSpeedX = 2;
+        ballSpeedY = -2;
+        paddleX = (canvas.width - paddleWidth) / 2;
     }
-    if (ballY + ballSpeedY < ballRadius) {
-        ballSpeedY = -ballSpeedY;
-    } else if (ballY + ballSpeedY > canvas.height - ballRadius) {
-        if (ballX > paddleX && ballX < paddleX + paddleWidth) {
-            ballSpeedY = -ballSpeedY;
-        } else {
-            // Game over logic
-            document.location.reload();
-        }
-    }
-    requestAnimationFrame(draw);
 }
 
 // Paddle movement
@@ -158,5 +163,6 @@ document.addEventListener("keydown", (e) => {
         paddleX -= 7;
     }
 });
+
 
 draw();

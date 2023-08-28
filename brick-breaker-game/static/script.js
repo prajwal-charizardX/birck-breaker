@@ -11,11 +11,11 @@ const paddleHeight = 10;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
 // Ball properties
-let ballRadius = 10;
+let ballRadius = 5;
 let ballX = canvas.width / 2;
 let ballY = canvas.height - 30;
-let ballSpeedX = 2;
-let ballSpeedY = -2;
+let ballSpeedX = 3;
+let ballSpeedY = -3;
 
 // Brick properties
 const brickWidth = 75;
